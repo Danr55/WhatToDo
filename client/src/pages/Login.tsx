@@ -9,6 +9,9 @@ const Login = () => {
     password: ''
   });
 
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setLoginData({
@@ -22,8 +25,11 @@ const Login = () => {
     try {
       const data = await login(loginData);
       Auth.login(data.token);
-    } catch (err) {
+    } catch (err: any) {
+      setErrorMessage(err || 'Username or password is incorrect');
       console.error('Failed to login', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -31,6 +37,7 @@ const Login = () => {
     <div className='container'>
       <form className='form' onSubmit={handleSubmit}>
         <h1>Login</h1>
+        {errorMessage && <p className='error-message' style={{ color: 'red'}}>{errorMessage}</p>}
         <label >Username</label>
         <input 
           type='text'
@@ -45,7 +52,7 @@ const Login = () => {
           value={loginData.password || ''}
           onChange={handleChange}
         />
-        <button type='submit'>Submit Form</button>
+        <button type='submit' disabled={isLoading}>{isLoading? 'Logging in...': 'Submit'}</button>
       </form>
     </div>
     

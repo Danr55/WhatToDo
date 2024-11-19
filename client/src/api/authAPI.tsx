@@ -14,13 +14,14 @@ const login = async (userInfo: UserLogin) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error('User information not retrieved, check network tab!');
+      const errorMessage = data.message || 'Username or password is incorrect';
+      throw new Error(errorMessage);
     }
 
     return data;
   } catch (err) {
     console.log('Error from user login: ', err);
-    return Promise.reject('Could not fetch user info');
+    return Promise.reject('Username or password is incorrect');
   }
 }
 

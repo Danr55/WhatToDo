@@ -11,12 +11,12 @@ export const login = async (req: Request, res: Response) => {
     where: { username },
   });
   if (!user) {
-    return res.status(401).json({ message: 'Authentication failed' });
+    return res.status(401).json({ message: 'Username not valid' });
   }
 
   const passwordIsValid = await bcrypt.compare(password, user.password);
   if (!passwordIsValid) {
-    return res.status(401).json({ message: 'Authentication failed' });
+    return res.status(401).json({ message: 'Incorrect Password try again' });
   }
 
   const secretKey = process.env.JWT_SECRET_KEY || '';
